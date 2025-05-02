@@ -130,4 +130,11 @@ def create_account_with_proxy():
     agree_button.click()
 
     # Print success message and save the email and password to a file
-    print(f"Your Gmail successfully created:\n{{\ngmail:
+    print(f"Your Gmail successfully created:\n{{\ngmail: {username}@gmail.com\npassword: {password}\n}}")
+    save_email_to_file(f"{username}@gmail.com", password)
+
+    # Close the browser
+    driver.quit()
+
+# Call the function to create an account
+create_account_with_proxy()
