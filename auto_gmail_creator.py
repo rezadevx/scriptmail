@@ -20,15 +20,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
 import uuid
+import os
 from fp.fp import FreeProxy
 
-# Dapatkan proxy acak
 def get_working_proxy():
     proxy = FreeProxy(rand=True, timeout=1).get()
     print(f"[INFO] Menggunakan proxy: {proxy}")
     return proxy
 
-# Buat nama dan akun acak
 def generate_random_name():
     first_names = ["John", "Alice", "Robert", "Sophia", "David", "Emma"]
     last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller"]
@@ -45,9 +44,14 @@ def generate_random_gender():
 
 def create_account_with_proxy():
     chrome_options = ChromeOptions()
+
+    # Buat direktori unik
+    user_data_dir = f"/tmp/chrome_user_data_{uuid.uuid4()}"
+    os.makedirs(user_data_dir, exist_ok=True)
+    chrome_options.add_argument(f'--user-data-dir={user_data_dir}')
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    
+
     proxy = get_working_proxy()
     chrome_options.add_argument(f'--proxy-server={proxy}')
 
