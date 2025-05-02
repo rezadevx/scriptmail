@@ -31,12 +31,7 @@ def get_working_proxy():
     print(f"Using proxy: {proxy}")
     return proxy
 
-# Function to save emails to a text file
-def save_email_to_file(email, password):
-    with open("emails.txt", "a") as file:
-        file.write(f"Gmail: {email}, Password: {password}\n")
-
-# Function to generate a random name (First and Last)
+# Function to generate random name (First and Last)
 def generate_random_name():
     first_names = ["John", "Alice", "Robert", "Sophia", "David", "Emma"]
     last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller"]
@@ -65,7 +60,7 @@ def create_account_with_proxy():
     # Set up Chrome options for using proxy
     chrome_options = ChromeOptions()
 
-    # Specify a unique user data directory for each session
+    # Specify a unique user data directory for each session (Use UUID to make sure it's unique)
     user_data_dir = "/tmp/chrome_user_data_" + str(uuid.uuid4())
     os.makedirs(user_data_dir, exist_ok=True)
 
@@ -129,9 +124,8 @@ def create_account_with_proxy():
     agree_button = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "button span.VfPpkd-vQzf8d")))
     agree_button.click()
 
-    # Print success message and save the email and password to a file
-    print(f"Your Gmail successfully created:\n{{\ngmail: {username}@gmail.com\npassword: {password}\n}}")
-    save_email_to_file(f"{username}@gmail.com", password)
+    # Print success message directly
+    print(f"Your Gmail successfully created:\nGmail: {username}@gmail.com\nPassword: {password}")
 
     # Close the browser
     driver.quit()
