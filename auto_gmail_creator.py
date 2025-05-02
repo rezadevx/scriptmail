@@ -22,6 +22,7 @@ import random
 import uuid
 import shutil
 import os
+import tempfile
 from fp.fp import FreeProxy
 
 def get_working_proxy():
@@ -46,9 +47,8 @@ def generate_random_gender():
 def create_account_with_proxy():
     chrome_options = Options()
 
-    # Buat direktori unik user-data
-    user_data_dir = f"/tmp/chrome_user_data_{uuid.uuid4()}"
-    os.makedirs(user_data_dir, exist_ok=True)
+    # Create a unique temporary directory for user data
+    user_data_dir = tempfile.mkdtemp(prefix="chrome_user_data_")
     chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -88,7 +88,7 @@ def create_account_with_proxy():
 
     finally:
         driver.quit()
-        # Bersihkan direktori setelah selesai
+        # Clean up the temporary directory after use
         shutil.rmtree(user_data_dir, ignore_errors=True)
 
 create_account_with_proxy()
