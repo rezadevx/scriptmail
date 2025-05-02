@@ -23,6 +23,7 @@ import time
 import random
 from fp.fp import FreeProxy
 import uuid
+import os
 
 # Function to get a working proxy
 def get_working_proxy():
@@ -63,7 +64,15 @@ def generate_random_gender():
 def create_account_with_proxy():
     # Set up Chrome options for using proxy
     chrome_options = ChromeOptions()
-    proxy = get_working_proxy()  # Get a working proxy
+
+    # Specify a unique user data directory for each session
+    user_data_dir = "/tmp/chrome_user_data_" + str(uuid.uuid4())
+    os.makedirs(user_data_dir, exist_ok=True)
+
+    chrome_options.add_argument(f'--user-data-dir={user_data_dir}')
+    
+    # Get a working proxy and set it up
+    proxy = get_working_proxy()
     chrome_options.add_argument(f'--proxy-server={proxy}')
     
     # Initialize WebDriver with the given options
@@ -121,11 +130,4 @@ def create_account_with_proxy():
     agree_button.click()
 
     # Print success message and save the email and password to a file
-    print(f"Your Gmail successfully created:\n{{\ngmail: {username}@gmail.com\npassword: {password}\n}}")
-    save_email_to_file(f"{username}@gmail.com", password)
-
-    # Close the browser
-    driver.quit()
-
-# Call the function to create an account
-create_account_with_proxy()
+    print(f"Your Gmail successfully created:\n{{\ngmail:
