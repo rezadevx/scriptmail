@@ -20,44 +20,32 @@ import random
 import uuid
 import time
 
-# Fungsi untuk menghasilkan nama acak
 def generate_random_name():
     first = random.choice(["John", "Alice", "Robert", "Sophia", "David", "Emma"])
     last = random.choice(["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller"])
     return first, last
 
-# Fungsi untuk menghasilkan username acak
 def generate_random_username(first, last):
     return f"{first.lower()}.{last.lower()}{uuid.uuid4().hex[:5]}"
 
-# Fungsi untuk menghasilkan tanggal lahir acak
 def generate_random_birthdate():
     return random.randint(1, 12), random.randint(1, 28), random.randint(1980, 2000)
 
-# Fungsi untuk memilih gender secara acak
 def generate_random_gender():
     return random.choice(["Male", "Female"])
 
-# Fungsi utama untuk membuat akun Gmail
 def create_account():
-    # Setup opsi Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # Tidak menggunakan headless mode untuk lebih mudah debugging
-    # chrome_options.add_argument("--headless")
 
-    # Jalankan ChromeDriver
     driver = webdriver.Chrome(options=chrome_options)
 
     try:
-        # Akses halaman pendaftaran akun Gmail
         driver.get("https://accounts.google.com/signup/v2/createaccount?flowName=GlifWebSignIn&flowEntry=SignUp")
 
-        # Tunggu elemen form muncul
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//input[@id='firstName']")))
 
-        # Isi form pendaftaran
         first, last = generate_random_name()
         username = generate_random_username(first, last)
         password = "SecurePassword123"
@@ -72,7 +60,6 @@ def create_account():
 
         driver.find_element(By.XPATH, "//span[text()='Next']").click()
 
-        # Tunggu halaman tanggal lahir
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//select[@id='birthMonth']")))
 
         driver.find_element(By.XPATH, "//select[@id='birthMonth']").send_keys(str(month))
@@ -86,12 +73,11 @@ def create_account():
         print(f"Gmail: {username}@gmail.com")
         print(f"Password: {password}\n")
 
-        time.sleep(10)  # Tunggu beberapa detik untuk melihat hasilnya di browser
+        time.sleep(10)
     except Exception as e:
         print("[GAGAL]", e)
     finally:
-        # Menutup driver setelah selesai
         driver.quit()
 
-# Jalankan fungsi untuk membuat akun
 create_account()
+
