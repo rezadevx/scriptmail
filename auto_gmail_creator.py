@@ -65,6 +65,9 @@ def create_account_with_proxy():
         # Akses halaman pendaftaran akun Gmail
         driver.get("https://accounts.google.com/signup/v2/createaccount?flowName=GlifWebSignIn&flowEntry=SignUp")
 
+        # Tunggu elemen form muncul
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//input[@id='firstName']")))
+
         # Isi form pendaftaran
         first, last = generate_random_name()
         username = generate_random_username(first, last)
@@ -72,21 +75,21 @@ def create_account_with_proxy():
         month, day, year = generate_random_birthdate()
         gender = generate_random_gender()
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "firstName"))).send_keys(first)
-        driver.find_element(By.ID, "lastName").send_keys(last)
-        driver.find_element(By.ID, "username").send_keys(username)
-        driver.find_element(By.NAME, "Passwd").send_keys(password)
-        driver.find_element(By.NAME, "ConfirmPasswd").send_keys(password)
+        driver.find_element(By.XPATH, "//input[@id='firstName']").send_keys(first)
+        driver.find_element(By.XPATH, "//input[@id='lastName']").send_keys(last)
+        driver.find_element(By.XPATH, "//input[@id='username']").send_keys(username)
+        driver.find_element(By.XPATH, "//input[@name='Passwd']").send_keys(password)
+        driver.find_element(By.XPATH, "//input[@name='ConfirmPasswd']").send_keys(password)
 
         driver.find_element(By.XPATH, "//span[text()='Next']").click()
 
         # Tunggu halaman tanggal lahir
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "birthMonth")))
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//select[@id='birthMonth']")))
 
-        driver.find_element(By.ID, "birthMonth").send_keys(str(month))
-        driver.find_element(By.ID, "birthDay").send_keys(str(day))
-        driver.find_element(By.ID, "birthYear").send_keys(str(year))
-        driver.find_element(By.ID, "gender").send_keys(gender)
+        driver.find_element(By.XPATH, "//select[@id='birthMonth']").send_keys(str(month))
+        driver.find_element(By.XPATH, "//input[@id='birthDay']").send_keys(str(day))
+        driver.find_element(By.XPATH, "//input[@id='birthYear']").send_keys(str(year))
+        driver.find_element(By.XPATH, "//select[@id='gender']").send_keys(gender)
 
         driver.find_element(By.XPATH, "//span[text()='Next']").click()
 
