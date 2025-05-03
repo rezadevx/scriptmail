@@ -16,11 +16,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from fp.fp import FreeProxy
 import random
 import uuid
 import time
-import shutil
 
 # Fungsi untuk menghasilkan nama acak
 def generate_random_name():
@@ -40,25 +38,16 @@ def generate_random_birthdate():
 def generate_random_gender():
     return random.choice(["Male", "Female"])
 
-# Fungsi untuk mendapatkan proxy gratis
-def get_working_proxy():
-    proxy = FreeProxy(rand=True, timeout=1).get()
-    print(f"[INFO] Menggunakan proxy: {proxy}")
-    return proxy
-
 # Fungsi utama untuk membuat akun Gmail
-def create_account_with_proxy():
+def create_account():
     # Setup opsi Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--headless")  # Menggunakan mode headless (tanpa UI)
-    
-    # Menambahkan proxy
-    proxy = get_working_proxy()
-    chrome_options.add_argument(f'--proxy-server={proxy}')
+    # Tidak menggunakan headless mode untuk lebih mudah debugging
+    # chrome_options.add_argument("--headless")
 
-    # Menjalankan ChromeDriver
+    # Jalankan ChromeDriver
     driver = webdriver.Chrome(options=chrome_options)
 
     try:
@@ -104,5 +93,5 @@ def create_account_with_proxy():
         # Menutup driver setelah selesai
         driver.quit()
 
-# Jalankan fungsi untuk membuat akun dengan proxy
-create_account_with_proxy()
+# Jalankan fungsi untuk membuat akun
+create_account()
