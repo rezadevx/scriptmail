@@ -12,32 +12,39 @@ print("""
 """)
 
 from selenium import webdriver
-import chromedriver_autoinstaller
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from fp.fp import FreeProxy
 import random
 import uuid
 import time
+import shutil
 
-# Fungsi untuk membuat akun secara acak
+# Fungsi untuk menghasilkan nama acak
 def generate_random_name():
     first = random.choice(["John", "Alice", "Robert", "Sophia", "David", "Emma"])
     last = random.choice(["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller"])
     return first, last
 
+# Fungsi untuk menghasilkan username acak
 def generate_random_username(first, last):
     return f"{first.lower()}.{last.lower()}{uuid.uuid4().hex[:5]}"
 
+# Fungsi untuk menghasilkan tanggal lahir acak
 def generate_random_birthdate():
     return random.randint(1, 12), random.randint(1, 28), random.randint(1980, 2000)
 
+# Fungsi untuk memilih gender secara acak
 def generate_random_gender():
     return random.choice(["Male", "Female"])
 
-# Mengunduh dan memasang chromedriver yang sesuai dengan versi Chrome
-chromedriver_autoinstaller.install()
+# Fungsi untuk mendapatkan proxy gratis
+def get_working_proxy():
+    proxy = FreeProxy(rand=True, timeout=1).get()
+    print(f"[INFO] Menggunakan proxy: {proxy}")
+    return proxy
 
 # Fungsi utama untuk membuat akun Gmail
 def create_account_with_proxy():
@@ -45,8 +52,13 @@ def create_account_with_proxy():
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--headless")  # Menggunakan mode headless (tanpa UI)
+    
+    # Menambahkan proxy
+    proxy = get_working_proxy()
+    chrome_options.add_argument(f'--proxy-server={proxy}')
 
-    # Menjalankan ChromeDriver dengan pengaturan yang sudah ditentukan
+    # Menjalankan ChromeDriver
     driver = webdriver.Chrome(options=chrome_options)
 
     try:
@@ -60,7 +72,6 @@ def create_account_with_proxy():
         month, day, year = generate_random_birthdate()
         gender = generate_random_gender()
 
-        # Isi nama, username, dan password
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "firstName"))).send_keys(first)
         driver.find_element(By.ID, "lastName").send_keys(last)
         driver.find_element(By.ID, "username").send_keys(username)
@@ -90,5 +101,5 @@ def create_account_with_proxy():
         # Menutup driver setelah selesai
         driver.quit()
 
-# Jalankan fungsi untuk membuat akun
+# Jalankan fungsi untuk membuat akun dengan proxy
 create_account_with_proxy()
